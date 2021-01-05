@@ -1,0 +1,66 @@
+import pandas as pd
+from pandas import ExcelWriter
+import re
+
+#Procesamos datos originales para generar la lista de países
+
+df = pd.read_excel('DatosOriginales.xlsx', sheet_name = 'Peace Agreements')
+lista_origen = df.values.tolist() #Datos
+lista_pais = list() #lista de paises final
+Columnas = list(df.columns.tolist())#Cabecera de datos
+paises_excluir =['ABB','Abkhazia','Aceh','African Great Lakes','Air and Azawad','Anjouan','Assam', 'Azawad',
+                 'Basque Country','Bodoland','Bougainville','Cabinda','Casamance','Chechnya','Chittagong Hill Tracts',
+                 'Cordillera','Darfur','Darjeeling','Eastern Sudan','Kurds-Kurdistan','Manipur','Mindanao','Mizoram',
+                 'Moluccas','Nagaland','Nagorno-Karabakh','Northern Ireland','Ogaden','Ossetia','Plateau State',
+                 'Presevo Valley','Puntland','Rebolusyonar','Somaliland','Southern Kaduna',
+                 'Southern Kordofan - Blue Nile - Abyei','Taliban','Transdniestria','Tripura','United Nations',
+                 'Yugoslavia former']
+
+for ref in lista_origen:
+    texto = ref[0]
+    lista_paises = texto.split('/')
+    
+    for pais in lista_paises:
+        pais = pais.replace('(', '')
+        pais = pais.replace(')', '')
+        if pais not in paises_excluir:
+            ref2 = list()
+            ref2.append(ref[5])
+            ref2.append(pais)        
+            lista_pais.append(ref2)
+
+Columnas = list(['AgtId', 'Pais'])
+df_destino = pd.DataFrame(lista_pais, columns = Columnas)
+
+writer = ExcelWriter('Paises.xlsx')
+df_destino.to_excel(writer, 'Paises', index=False)
+writer.save()
+print('Lista de Paises Terminado')
+
+#Procesamos datos sobre los que vamos a realizar el análisis para trasponer las columnas a utilizar
+
+df = pd.read_excel('DatosAnalisis.xlsx', sheet_name = 'Peace Agreements')
+lista_origen = df.values.tolist() #Datos
+Columnas = list(df.columns.tolist())#Cabecera de datos
+lista_clasificacion = list() # Lista de grupos final
+
+for ref in lista_origen:
+    #Clasificaciones
+    ind = 13
+    for campo in ref[13:27]:
+        if campo > 0:
+            clasificacion= list()
+            clasificacion.append(ref[4])
+            #clasificacion.append(lista_tipo[ind])
+            clasificacion.append(Columnas[ind])
+            lista_clasificacion.append(clasificacion)
+        ind = ind+1
+        
+#Clasificaciones
+Columnas = list(['AgtId', 'Grupo'])
+df_destino = pd.DataFrame(lista_clasificacion, columns = Columnas)
+
+writer = ExcelWriter('Clasificacion.xlsx')
+df_destino.to_excel(writer, 'Clasificacion', index=False)
+writer.save()
+print('Lista de Grupos Terminado')
