@@ -10,4 +10,6 @@ El contenido del repositorio es el siguiente:
 * `DatosAnalisis.xlsx`: Datos utilizados para realizar la visualización, es una manipulación del fichero excel DatosOriginales.xlsx.
 * `Paises.xlsx`: Listado de países, obtenido de DatosOriginales después de ejecutar el código python.
 * `Clasificacion.xlsx`: Listado de grupos, obtenido de DatosOriginales después de ejecutar el código python.
+* `PAC4.twb`: Proyecto de tableau con la visualización final.
+* `Entrega.pdf`: Documento final de la Práctica.
 * `README.md`: descripción del repositorio.
